@@ -1,0 +1,26 @@
+import asyncio
+from telethon import TelegramClient
+from telethon.tl.functions.account import UpdateProfileRequest
+from datetime import datetime
+
+# API_ID va API_HASH o'rniga o'z API ma'lumotlaringizni qo'ying
+api_id = '21195269'
+api_hash = '3b076bfded07f5c4ac5b0493d807a83b'
+
+# Telefon raqamingizni kiriting
+phone_number = '+998912722303'
+
+# TelegramClient yaratish
+client = TelegramClient('session_name', api_id, api_hash)
+
+async def update_profile_name():
+    await client.start(phone_number)
+    while True:
+        current_time = datetime.now().strftime('%H:%M')
+        await client(UpdateProfileRequest(first_name=current_time))
+        print(f'Profile name updated to: {current_time}')
+        await asyncio.sleep(60)  # 60 soniya kutish
+
+# Asinxron funksiya ishga tushirish
+with client:
+    client.loop.run_until_complete(update_profile_name())
