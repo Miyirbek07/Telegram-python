@@ -27,3 +27,6 @@ jobs:
     - name: Run script
       run: |
         python your_script.py
+git add .
+git commit -m "Add GitHub Actions workflow"
+git push origin main
