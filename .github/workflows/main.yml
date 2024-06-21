@@ -1,29 +1,26 @@
-name: Python application
+import asyncio
+from telethon import TelegramClient
+from telethon.tl.functions.account import UpdateProfileRequest
+from datetime import datetime
 
-on:
-  push:
-    branches: [ main ]
-  schedule:
-    - cron: '0 * * * *' # Har bir soatda ishga tushadi
+# API_ID va API_HASH o'rniga o'z API ma'lumotlaringizni qo'ying
+api_id = '21195269'
+api_hash = '3b076bfded07f5c4ac5b0493d807a83b'
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+# Telefon raqamingizni kiriting
+phone_number = '+998912722303'
 
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+# TelegramClient yaratish
+client = TelegramClient('session_name', api_id, api_hash)
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.x
+async def update_profile_name():
+    await client.start(phone_number)
+    while True:
+        current_time = datetime.now().strftime('%H:%M')
+        await client(UpdateProfileRequest(first_name=current_time))
+        print(f'Profile name updated to: {current_time}')
+        await asyncio.sleep(60)  # 60 soniya kutish
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-
-    - name: Run script
-      run: |
-        python your_script.py
+# Asinxron funksiya ishga tushirish
+with client:
+    client.loop.run_until_complete(update_profile_name())
